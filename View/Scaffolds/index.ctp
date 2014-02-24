@@ -25,8 +25,9 @@ if (!isset($modules)) {
     $modulus = 11;
 }
 if (!isset($model)) {
-    $models = ClassRegistry::keys();
-    $model = Inflector::camelize(current($models));
+   // $models = ClassRegistry::keys();
+  //  $model = Inflector::camelize(current($models));
+    $model = $modelClass;
 }
 
 
@@ -176,6 +177,10 @@ if ($simple_view) {
                 ));
                 ?>
                 <?php
+                
+               // debug($model);
+              //  debug($this->params['paging']);
+                
                 $page = $this->params['paging'][$model]['page'];
                 $pageCount = $this->params['paging'][$model]['pageCount'];
                 if ($modulus > $pageCount) {
