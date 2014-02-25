@@ -97,7 +97,7 @@ $button_name = ($this->request->action === 'add') ? 'Add' : 'Save';
 
                         $input = $this->Form->input($scaffoldField, $_opt);
 
-                        if ($field_type[$scaffoldField] == 'date') {
+                        if (in_array($field_type[$scaffoldField], array('date', 'datetime'))) {
                             $input = $this->Form->input($scaffoldField, array
                                 (
                                 'label' => false,
@@ -106,7 +106,10 @@ $button_name = ($this->request->action === 'add') ? 'Add' : 'Save';
                                 'id' => $uid,
                                 'class' => "form-control"
                             ));
-                            $input = str_replace('"text"', '"date"', $input);
+                            if ($field_type[$scaffoldField] == 'date')
+                                $input = str_replace('"text"', '"date"', $input);
+                           // else
+                             //   $input = str_replace('"text"', '"datetime"', $input);
                         }
                         $caption = Inflector::humanize($scaffoldField);
                         ?>

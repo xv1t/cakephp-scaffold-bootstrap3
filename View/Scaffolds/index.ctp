@@ -79,8 +79,10 @@ if ($simple_view) {
                 </div>
             </h3></div>
 
-
-        <table class="table table-bordered table-hover table-condensed">
+        <div style="overflow-x: auto">
+            
+        
+        <table class="table table-bordered table-hover table-condensed" >
             <thead>
                 <tr class="active">
                     <?php foreach ($table_fields as $_field): ?>
@@ -145,6 +147,7 @@ if ($simple_view) {
                 ?>
             </tbody>
         </table>
+            </div>
         <div class="panel-footer">
             <p><?php
                 echo $this->Paginator->counter(array(
