@@ -153,14 +153,14 @@ if ($simple_view) {
                 ?></p>
             <ul class="pagination  pagination-sm">
 
-                <?php echo $this->Paginator->first('<span class="glyphicon glyphicon-step-backward"></span>', array('tag' => 'li', 'title' => 'First', 'escape' => false)); ?>
+                <?php echo $this->Paginator->first('<span class="glyphicon glyphicon-step-backward"></span>&nbsp;', array('tag' => 'li', 'title' => 'First', 'escape' => false)); ?>
                 <?php
-                echo $this->Paginator->prev('<span class="glyphicon glyphicon-backward"></span>', array(
+                echo $this->Paginator->prev('<span class="glyphicon glyphicon-backward"></span>&nbsp;', array(
                     'tag' => 'li',
                     'escape' => false,
                     'title' => 'Prevous page',
                     'class' => 'prev',
-                        ), $this->Paginator->link('<span class="glyphicon glyphicon-backward"></span>', array(), array(
+                        ), $this->Paginator->link('<span class="glyphicon glyphicon-backward"></span>&nbsp;', array(), array(
                             'escape' => false,
                         )), array(
                     'tag' => 'li',
@@ -198,19 +198,19 @@ if ($simple_view) {
                         'class' => $class,
                     ));
                 }
-                echo $this->Paginator->next('<span class="glyphicon glyphicon-forward"></span>', array(
+                echo $this->Paginator->next('<span class="glyphicon glyphicon-forward"></span>&nbsp;', array(
                     'tag' => 'li',
                     'class' => 'next',
                     'escape' => false,
                     'title' => 'Next page',
-                        ), $this->Paginator->link('<span class="glyphicon glyphicon-forward"></span>', array(), array('escape' => false,)), array(
+                        ), $this->Paginator->link('<span class="glyphicon glyphicon-forward"></span>&nbsp;', array(), array('escape' => false,)), array(
                     'tag' => 'li',
                     'escape' => false,
                     'class' => 'next disabled',
                 ));
                 ?>
                 <?php
-                echo $this->Paginator->last('<span class="glyphicon glyphicon-step-forward"></span>', array('tag' => 'li', 'title' => 'Last', 'escape' => false,));
+                echo $this->Paginator->last('<span class="glyphicon glyphicon-step-forward"></span>&nbsp;', array('tag' => 'li', 'title' => 'Last', 'escape' => false,));
                 ?>
 
             </ul>
