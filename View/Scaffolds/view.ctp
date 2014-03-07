@@ -201,6 +201,7 @@ $id = false;
                 </h3>
             </div>
             <?php if (!empty(${$singularVar}[$_alias])): ?>
+            <div style="overflow-x: auto">
                 <table class="table table-bordered table-condensed table-striped">
                     <thead>
                         <tr>
@@ -251,6 +252,7 @@ $id = false;
                         ?>
                     </tbody>
                 </table>
+            </div>
             <?php endif; ?>
 
         <?php endforeach; ?>
