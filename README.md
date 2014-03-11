@@ -6,6 +6,9 @@ Scaffold for CakePHP
 2. Copy folder `/home/me/projects/cakephp-scaffold-bootstrap3/View/Scaffolds` with files into your `app/View`
 3. In your controller, for example `Controllers/AppController.php` add a class variable `$scaffold=true`
 
+For more information about scaffolding, please read [CakePHP Scaffolding](http://book.cakephp.org/2.0/en/controllers/scaffolding.html)
+
+# Screenshots
 ## Index
 ![](http://i33.fastpic.ru/big/2014/0219/4d/097870b6f932d4b0d10d0994abb93d4d.png)
 
