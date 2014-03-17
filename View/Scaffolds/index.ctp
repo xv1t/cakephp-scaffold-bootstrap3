@@ -17,8 +17,8 @@ if (!isset($modules)) {
     $modulus = 11;
 }
 if (!isset($model)) {
-   // $models = ClassRegistry::keys();
-  //  $model = Inflector::camelize(current($models));
+    // $models = ClassRegistry::keys();
+    //  $model = Inflector::camelize(current($models));
     $model = $modelClass;
 }
 
@@ -80,83 +80,90 @@ if ($simple_view) {
             </h3></div>
 
         <div style="overflow-x: auto">
-            
-        
-        <table class="table table-bordered table-hover table-condensed" >
-            <thead>
-                <tr class="active">
-                    <?php foreach ($table_fields as $_field): ?>
-                        <th><?php echo $this->Paginator->sort($_field); ?></th>
-                    <?php endforeach; ?>
-                    <th><?php echo __d('cake', 'Actions'); ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                foreach (${$pluralVar} as ${$singularVar}):
-                    echo '<tr>';
-                    foreach ($table_fields as $_field) {
-                        $isKey = false;
-                        if (!empty($associations['belongsTo'])) {
-                            foreach ($associations['belongsTo'] as $_alias => $_details) {
-                                if ($_field === $_details['foreignKey']) {
-                                    $isKey = true;
-                                    echo '<td>' . $this->Html->link(${$singularVar}[$_alias][$_details['displayField']], array('controller' => $_details['controller'], 'action' => 'view', ${$singularVar}[$_alias][$_details['primaryKey']])) . '</td>';
-                                    break;
+
+
+            <table class="table table-bordered table-hover table-condensed" >
+                <thead>
+                    <tr class="active">
+                        <?php foreach ($table_fields as $_field): ?>
+                            <th><?php echo $this->Paginator->sort($_field); ?></th>
+                        <?php endforeach; ?>
+                        <th><?php echo __d('cake', 'Actions'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach (${$pluralVar} as ${$singularVar}):
+                        echo '<tr>';
+                        foreach ($table_fields as $_field) {
+                            $isKey = false;
+                            if (!empty($associations['belongsTo'])) {
+                                foreach ($associations['belongsTo'] as $_alias => $_details) {
+                                    if ($_field === $_details['foreignKey']) {
+                                        $isKey = true;
+                                        echo '<td>' . $this->Html->link(${$singularVar}[$_alias][$_details['displayField']], array('controller' => $_details['controller'], 'action' => 'view', ${$singularVar}[$_alias][$_details['primaryKey']])) . '</td>';
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                        if ($isKey !== true) {
-                            $td_val = h(${$singularVar}[$modelClass][$_field]);
-                            /*
-                             * Boolean=checkbox field
-                             */
-
-                            if (
-                                    strpos($_field, 'url') !== false &&
-                                    strpos(${$singularVar}[$modelClass][$_field], 'http://') === 0
-                            ) {
-                                $td_val = "<a onclick='if (!confirm(\"Go??\")) return false;' href=\"$td_val\" target=\"about_blank\">$td_val</a>";
+                            if ($isKey !== true) {
+                                $td_val = '';
+                                if (empty(${$singularVar}))
+                                    $td_val = '';
+                                else {
+                                    if (!empty(${$singularVar}[$modelClass]))
+                                        if (!empty(${$singularVar}[$modelClass][$_field]))
+                                            $td_val = h(${$singularVar}[$modelClass][$_field]);
+                                }
                                 /*
-                                 * generate link
+                                 * Boolean=checkbox field
                                  */
+
+                                if (
+                                        strpos($_field, 'url') !== false &&
+                                        strpos(${$singularVar}[$modelClass][$_field], 'http://') === 0
+                                ) {
+                                    $td_val = "<a onclick='if (!confirm(\"Go??\")) return false;' href=\"$td_val\" target=\"about_blank\">$td_val</a>";
+                                    /*
+                                     * generate link
+                                     */
+                                }
+
+                                $td_options = null;
+                                if ($field_type[$_field] == 'boolean') {
+                                    $td_options = ' class=text-center';
+                                    $td_val = '<input disabled type=checkbox ';
+                                    if (${$singularVar}[$modelClass][$_field])
+                                        $td_val .= 'checked';
+                                    $td_val .= '>';
+                                }
+                                echo "<td$td_options>" . $td_val . '</td>';
                             }
+                        } //field
 
-                            $td_options = null;
-                            if ($field_type[$_field] == 'boolean') {
-                                $td_options = ' class=text-center';
-                                $td_val = '<input disabled type=checkbox ';
-                                if (${$singularVar}[$modelClass][$_field])
-                                    $td_val .= 'checked';
-                                $td_val .= '>';
-                            }
-                            echo "<td$td_options>" . $td_val . '</td>';
-                        }
-                    } //field
+                        echo '<td class="noactions"><nobr>';
+                        echo $this->Html->link('<span class="glyphicon glyphicon-eye-open"><span>', array('action' => 'view', ${$singularVar}[$modelClass][$primaryKey],), array('escape' => false, 'class' => 'btn btn-default btn-xs'));
+                        echo ' ' . $this->Html->link('<span class="glyphicon glyphicon-pencil"><span>', array('action' => 'edit', ${$singularVar}[$modelClass][$primaryKey]), array('escape' => false, 'class' => 'btn btn-default btn-xs'));
+                        echo ' ' . $this->Form->postLink(
+                                '<span class="glyphicon glyphicon glyphicon-remove"><span>', array('action' => 'delete', ${$singularVar}[$modelClass][$primaryKey]), array('escape' => false, 'class' => 'btn btn-default btn-xs'), __d('cake', 'Are you sure you want to delete # %s?', ${$singularVar}[$modelClass][$primaryKey])
+                        );
+                        echo '</nobr></td>';
+                        echo '</tr>';
 
-                    echo '<td class="noactions"><nobr>';
-                    echo $this->Html->link('<span class="glyphicon glyphicon-eye-open"><span>', array('action' => 'view', ${$singularVar}[$modelClass][$primaryKey],), array('escape' => false, 'class' => 'btn btn-default btn-xs'));
-                    echo ' ' . $this->Html->link('<span class="glyphicon glyphicon-pencil"><span>', array('action' => 'edit', ${$singularVar}[$modelClass][$primaryKey]), array('escape' => false, 'class' => 'btn btn-default btn-xs'));
-                    echo ' ' . $this->Form->postLink(
-                            '<span class="glyphicon glyphicon glyphicon-remove"><span>', array('action' => 'delete', ${$singularVar}[$modelClass][$primaryKey]), array('escape' => false, 'class' => 'btn btn-default btn-xs'), __d('cake', 'Are you sure you want to delete # %s?', ${$singularVar}[$modelClass][$primaryKey])
-                    );
-                    echo '</nobr></td>';
-                    echo '</tr>';
-
-                endforeach;
-                ?>
-            </tbody>
-        </table>
-            </div>
+                    endforeach;
+                    ?>
+                </tbody>
+            </table>
+        </div>
         <div class="panel-footer">
             <p><?php
-                echo $this->Paginator->counter(array(
-                    'format' => __d('cake', 'Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
-                ));
-                ?></p>
+                    echo $this->Paginator->counter(array(
+                        'format' => __d('cake', 'Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
+                    ));
+                    ?></p>
             <ul class="pagination  pagination-sm">
 
-                <?php echo $this->Paginator->first('<span class="glyphicon glyphicon-step-backward"></span>&nbsp;', array('tag' => 'li', 'title' => 'First', 'escape' => false)); ?>
+<?php echo $this->Paginator->first('<span class="glyphicon glyphicon-step-backward"></span>&nbsp;', array('tag' => 'li', 'title' => 'First', 'escape' => false)); ?>
                 <?php
                 echo $this->Paginator->prev('<span class="glyphicon glyphicon-backward"></span>&nbsp;', array(
                     'tag' => 'li',
@@ -172,10 +179,9 @@ if ($simple_view) {
                 ));
                 ?>
                 <?php
-                
-               // debug($model);
-              //  debug($this->params['paging']);
-                
+                // debug($model);
+                //  debug($this->params['paging']);
+
                 $page = $this->params['paging'][$model]['page'];
                 $pageCount = $this->params['paging'][$model]['pageCount'];
                 if ($modulus > $pageCount) {

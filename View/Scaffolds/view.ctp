@@ -101,18 +101,24 @@ $id = false;
                         }
                     }
                     if ($isKey !== true) {
-                       // if ($_field = $this->model->promaryKey)
-                                
+                        // if ($_field = $this->model->promaryKey)
+
                         if (!$simple_view || ($simple_view && !in_array($_field, array('id', 'created', 'updated', 'create_user_id', 'update_user_id')))) {
                             echo "\t\t<dt>" . Inflector::humanize($_field) . "</dt>\n";
                             switch ($field_type[$_field]) {
                                 case 'boolean':
-                                    $checked = (${$singularVar}[$modelClass][$_field]) ? 'checked' : '';
+                                    if (empty(${$singularVar}))
+                                        $checked = '';
+                                    else
+                                        $checked = (${$singularVar}[$modelClass][$_field]) ? 'checked' : '';
                                     echo "<dd><input type=checkbox $checked disabled></dd>";
                                     break;
 
                                 default:
-                                    echo "\t\t<dd>" . h(${$singularVar}[$modelClass][$_field]) . "&nbsp;</dd>\n";
+                                    $val = '';
+                                    if (!empty(${$singularVar}[$modelClass][$_field]))
+                                        $val = ${$singularVar}[$modelClass][$_field];
+                                    echo "\t\t<dd>" . h($val) . "&nbsp;</dd>\n";
                                     break;
                             }
                         }
@@ -150,7 +156,7 @@ $id = false;
                     </h3>
                 </div>    
                 <div class="panel-body">
-                    <?php if (!empty(${$singularVar}[$_alias])): ?>
+                        <?php if (!empty(${$singularVar}[$_alias])): ?>
                         <dl class="dl-horizontal">
                             <?php
                             $otherFields = array_keys(${$singularVar}[$_alias]);
@@ -160,7 +166,7 @@ $id = false;
                             }
                             ?>
                         </dl>
-                    <?php endif; ?>
+                <?php endif; ?>
                 </div>
                 <?php
             endforeach;
@@ -178,13 +184,13 @@ $id = false;
         }
         $relations = array_merge($associations['hasMany'], $associations['hasAndBelongsToMany']);
         $i = 0;
-      //  debug($relations);
+        //  debug($relations);
         foreach ($relations as $_alias => $_details):
             $otherSingularVar = Inflector::variable($_alias);
             ?>
             <div class="panel-footer">
                 <h3>
-                    <?php echo Inflector::humanize($_details['controller']) ?>
+    <?php echo Inflector::humanize($_details['controller']) ?>
                     <small><?php echo __d('cake', "Related"); ?></small>
                     <div class="btn-group pull-right">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -200,63 +206,63 @@ $id = false;
                     </div>
                 </h3>
             </div>
-            <?php if (!empty(${$singularVar}[$_alias])): ?>
-            <div style="overflow-x: auto">
-                <table class="table table-bordered table-condensed table-striped">
-                    <thead>
-                        <tr>
+    <?php if (!empty(${$singularVar}[$_alias])): ?>
+                <div style="overflow-x: auto">
+                    <table class="table table-bordered table-condensed table-striped">
+                        <thead>
+                            <tr>
+                                <?php
+                                $otherFields = array_keys(${$singularVar}[$_alias][0]);
+                                if (isset($_details['with'])) {
+                                    $index = array_search($_details['with'], $otherFields);
+                                    unset($otherFields[$index]);
+                                }
+                                foreach ($otherFields as $_field) {
+                                    if (!$simple_view || ($simple_view && !in_array($_field, array('id', 'created', 'updated', 'create_user_id', 'update_user_id'))))
+                                        echo "\t\t<th>" . Inflector::humanize($_field) . "</th>\n";
+                                }
+                                ?>
+                                <th class="actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             <?php
-                            $otherFields = array_keys(${$singularVar}[$_alias][0]);
-                            if (isset($_details['with'])) {
-                                $index = array_search($_details['with'], $otherFields);
-                                unset($otherFields[$index]);
-                            }
-                            foreach ($otherFields as $_field) {
-                                if (!$simple_view || ($simple_view && !in_array($_field, array('id', 'created', 'updated', 'create_user_id', 'update_user_id'))))
-                                    echo "\t\t<th>" . Inflector::humanize($_field) . "</th>\n";
-                            }
+                            $i = 0;
+                            foreach (${$singularVar}[$_alias] as ${$otherSingularVar}):
+                                echo "\t\t<tr>\n";
+
+                                foreach ($otherFields as $_field) {
+                                    if (!$simple_view || ($simple_view && !in_array($_field, array('id', 'created', 'updated', 'create_user_id', 'update_user_id'))))
+                                        echo "\t\t\t<td>" . ${$otherSingularVar}[$_field] . "</td>\n";
+                                }
+
+                                echo "\t\t\t<td class=\"actions\">\n";
+                                echo "\t\t\t\t";
+                                echo $this->Html->link(
+                                        __d('cake', 'View'), array('plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'view', ${$otherSingularVar}[$_details['primaryKey']])
+                                );
+                                echo "\n";
+                                echo "\t\t\t\t";
+                                echo $this->Html->link(
+                                        __d('cake', 'Edit'), array('plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'edit', ${$otherSingularVar}[$_details['primaryKey']])
+                                );
+                                echo "\n";
+                                echo "\t\t\t\t";
+                                echo $this->Form->postLink(
+                                        __d('cake', 'Delete'), array('plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'delete', ${$otherSingularVar}[$_details['primaryKey']]), null, __d('cake', 'Are you sure you want to delete # %s?', ${$otherSingularVar}[$_details['primaryKey']])
+                                );
+                                echo "\n";
+                                echo "\t\t\t</td>\n";
+                                echo "\t\t</tr>\n";
+                            endforeach;
                             ?>
-                            <th class="actions">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $i = 0;
-                        foreach (${$singularVar}[$_alias] as ${$otherSingularVar}):
-                            echo "\t\t<tr>\n";
-
-                            foreach ($otherFields as $_field) {
-                                if (!$simple_view || ($simple_view && !in_array($_field, array('id', 'created', 'updated', 'create_user_id', 'update_user_id'))))
-                                    echo "\t\t\t<td>" . ${$otherSingularVar}[$_field] . "</td>\n";
-                            }
-
-                            echo "\t\t\t<td class=\"actions\">\n";
-                            echo "\t\t\t\t";
-                            echo $this->Html->link(
-                                    __d('cake', 'View'), array('plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'view', ${$otherSingularVar}[$_details['primaryKey']])
-                            );
-                            echo "\n";
-                            echo "\t\t\t\t";
-                            echo $this->Html->link(
-                                    __d('cake', 'Edit'), array('plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'edit', ${$otherSingularVar}[$_details['primaryKey']])
-                            );
-                            echo "\n";
-                            echo "\t\t\t\t";
-                            echo $this->Form->postLink(
-                                    __d('cake', 'Delete'), array('plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'delete', ${$otherSingularVar}[$_details['primaryKey']]), null, __d('cake', 'Are you sure you want to delete # %s?', ${$otherSingularVar}[$_details['primaryKey']])
-                            );
-                            echo "\n";
-                            echo "\t\t\t</td>\n";
-                            echo "\t\t</tr>\n";
-                        endforeach;
-                        ?>
-                    </tbody>
-                </table>
-            </div>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
 
         <?php endforeach; ?>
 
-        <?php //end of panel    ?>
+<?php //end of panel     ?>
     </div>
 </div>
