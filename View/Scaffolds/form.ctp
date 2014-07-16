@@ -97,20 +97,21 @@ $button_name = ($this->request->action === 'add') ? 'Add' : 'Save';
 
                         $input = $this->Form->input($scaffoldField, $_opt);
 
-                        if (in_array($field_type[$scaffoldField], array('date', 'datetime'))) {
-                            $input = $this->Form->input($scaffoldField, array
-                                (
-                                'label' => false,
-                                'type' => 'text',
-                                'div' => false,
-                                'id' => $uid,
-                                'class' => "form-control"
-                            ));
-                            if ($field_type[$scaffoldField] == 'date')
-                                $input = str_replace('"text"', '"date"', $input);
-                           // else
-                             //   $input = str_replace('"text"', '"datetime"', $input);
-                        }
+                        if (!empty($field_type[$scaffoldField]))
+                            if (in_array($field_type[$scaffoldField], array('date', 'datetime'))) {
+                                $input = $this->Form->input($scaffoldField, array
+                                    (
+                                    'label' => false,
+                                    'type' => 'text',
+                                    'div' => false,
+                                    'id' => $uid,
+                                    'class' => "form-control"
+                                ));
+                                if ($field_type[$scaffoldField] == 'date')
+                                    $input = str_replace('"text"', '"date"', $input);
+                               // else
+                                 //   $input = str_replace('"text"', '"datetime"', $input);
+                            }
                         $caption = Inflector::humanize($scaffoldField);
                         ?>
                         <div class="form-group">
